@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# With these exceptions
+!.gitignore
+!StatusReport.txt
+!TrafficLight.hs
+!TrafficLightRun.hs
+!README.md
