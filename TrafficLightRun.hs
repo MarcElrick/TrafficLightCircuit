@@ -8,16 +8,24 @@ import TrafficLight
 test_data_1 :: [String]
 test_data_1 =
 -----------------------------------------
---   c  x  y       expected result
+--   reset
 -----------------------------------------
-  [ "0  0  0"  --  0  (c=0 so output=x)
-  , "0  0  1"  --  0  (c=0 so output=x)
-  , "0  1  0"  --  1  (c=0 so output=x)
-  , "0  1  1"  --  1  (c=0 so output=x)
-  , "1  0  0"  --  0  (c=1 so output=y)
-  , "1  0  1"  --  1  (c=1 so output=y)
-  , "1  1  0"  --  0  (c=1 so output=y)
-  , "1  1  1"  --  1  (c=1 so output=y)
+  [ "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "1"  --  reset, cycle 11
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  reset
+  , "0"  --  
+  , "0"  --  
   ]
 
 main :: IO ()
@@ -27,44 +35,22 @@ main = driver $ do
   useData test_data_1
 
 -- Input ports  
-  in_c <- inPortBit "c"
-  in_x <- inPortBit "x"
-  in_y <- inPortBit "y"
+  in_reset <- inPortBit "reset"
+
 
 -- Input signals
-  let c = inbsig in_c
-  let x = inbsig in_x
-  let y = inbsig in_y
+  let reset = inbsig in_reset
 
 -- Circuit
-  let z = mymux1 c x y
+  let [red, amber, green] = combinedVersion1 reset
 
 -- Format the results  
   format
-    [string "  c=", bit c,
-     string "  x=", bit x,
-     string "  y=", bit y,
-     string "    output z=", bit z
+    [string "  reset=", bit reset,
+     string "  output red=", bit red,
+     string "  output amber=", bit amber,
+     string "  output green=", bit green
     ]
 
 -- Run the circuit on the test data
   runSimulation
-
-
-  {-
-  mux1Run input = runAllInput input output
-  where
--- Extract input signals  
-    c = getbit input 0
-    x = getbit input 1
-    y = getbit input 2
--- The circuit to be simulated
-    z = mymux1 c x y
--- Format the output
-    output =
-      [string "  c=", bit c,
-       string "  x=", bit x,
-       string "  y=", bit y,
-       string "    output z=", bit z
-      ]
--}
