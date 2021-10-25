@@ -24,8 +24,8 @@ cbit reset cin = (cout,s)
  -- Input: 4 bit word from counter keeping track of clock
  -- Output: 3 bit word - whichever bit is "lit up" indicates which light is on
 
-version1 :: Bit a => a -> a -> a -> a -> [a]
-version1 x0 x1 x2 x3 = [red, amber, green]
+lighting :: Bit a => a -> a -> a -> a -> [a]
+lighting x0 x1 x2 x3 = [red, amber, green]
     where red = x1
           green = and2 (nand2 x2 x3) (nor2 x0 x1)
           amber = inv (or2 red green)
@@ -35,7 +35,7 @@ version1 x0 x1 x2 x3 = [red, amber, green]
  -- Input: reset bit
  -- Ouput: 3 bit word - whichever bit is "lit up" indicates which light is on
 
-combinedVersion1 :: CBit a => a ->[a]
-combinedVersion1 reset = [red, amber, green]
+controller1 :: CBit a => a ->[a]
+controller1 reset = [red, amber, green]
     where [x0, x1, x2, x3] = count4 reset
-          [red, amber, green] = version1 x0 x1 x2 x3
+          [red, amber, green] = lighting x0 x1 x2 x3

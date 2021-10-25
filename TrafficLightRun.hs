@@ -25,7 +25,7 @@ test_data_1 =
   , "0"  --  
   , "0"  -- 
   , "0"  --  
-  , "0"  --  
+  , "0"  -- 
   ]
 
 main :: IO ()
@@ -42,7 +42,7 @@ main = driver $ do
   let reset = inbsig in_reset
 
 -- Circuit
-  let [red, amber, green] = combinedVersion1 reset
+  let [red, amber, green] = controller1 reset
 
 -- Format the results  
   format
