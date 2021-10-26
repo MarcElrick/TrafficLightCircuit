@@ -28,7 +28,7 @@ lighting :: Bit a => a -> a -> a -> a -> [a]
 lighting x0 x1 x2 x3 = [red, amber, green]
     where red = x1
           green = and2 (nand2 x2 x3) (nor2 x0 x1)
-          amber = inv (or2 red green)
+          amber = nor2 red green
 
 
  -- Traffic light circuit wired up to count4
