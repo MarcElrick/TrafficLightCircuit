@@ -1,41 +1,26 @@
 module TrafficLight where
-import HDL.Hydra.Core.Lib
-
--- Version (b) of the 4 bit counter taken from examples/counter/Count4.hs
--- This is used to keep count of which clock cycle we are on.
--- Modified to also reset once the value 1001 is reached.
-
-count4 :: CBit a => a -> [a]
-count4 reset = [x0,x1,x2,x3]
-  where 
-        restart = or2 reset x0
-        (c0,x0) = cbit restart c1
-        (c1,x1) = cbit restart c2
-        (c2,x2) = cbit restart c3
-        (c3,x3) = cbit restart one
-
-cbit :: CBit a => a -> a -> (a,a)
-cbit reset cin = (cout,s)
-  where
-    s = dff (mux1 reset s' zero)
-    (cout,s') = halfAdd cin s
-
- -- Traffic light circuit
- -- Input: 4 bit word from counter keeping track of clock
- -- Output: 3 bit word - whichever bit is "lit up" indicates which light is on
-
-lighting :: Bit a => a -> a -> a -> a -> [a]
-lighting x0 x1 x2 x3 = [red, amber, green]
-    where red = x1
-          green = and2 (nand2 x2 x3) (nor2 x0 x1)
-          amber = nor2 red green
+import HDL.Hydra.Core.Lib (CBit(..), Logic(inv, or4, and2, or2, or3))
+import HDL.Hydra.Circuits.Combinational ()
 
 
- -- Traffic light circuit wired up to count4
- -- Input: reset bit
- -- Ouput: 3 bit word - whichever bit is "lit up" indicates which light is on
+ -- Traffic light circuit v1
+ -- Input: 1 bit word representing reset
+ -- Output: 3 bit tuple - whichever bit is "lit up" indicates which light is on
 
-controller1 :: CBit a => a ->[a]
-controller1 reset = [red, amber, green]
-    where [x0, x1, x2, x3] = count4 reset
-          [red, amber, green] = lighting x0 x1 x2 x3
+
+controller1 :: CBit a => a -> (a, a, a)
+controller1 reset = (red, amber, green)
+    where green = or3 x0 x1 x2
+          amber = or2 x3 x8
+          red = or4 x4 x5 x6 x7 
+          reset' = inv reset
+
+          x0 = dff (or2 reset x8)
+          x1 = dff (and2 reset' x0)
+          x2 = dff (and2 reset' x1)
+          x3 = dff (and2 reset' x2)
+          x4 = dff (and2 reset' x3)
+          x5 = dff (and2 reset' x4)
+          x6 = dff (and2 reset' x5)
+          x7 = dff (and2 reset' x6)
+          x8 = dff (and2 reset' x7)

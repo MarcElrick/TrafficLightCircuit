@@ -42,7 +42,7 @@ main = driver $ do
   let reset = inbsig in_reset
 
 -- Circuit
-  let [red, amber, green] = controller1 reset
+  let (red, amber, green) = controller1 reset
 
 -- Format the results  
   format
