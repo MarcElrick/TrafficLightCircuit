@@ -99,75 +99,81 @@ controller1Driver = driver $ do
 
 controller2TestData1, controller2TestData2, controller2TestData3 :: [String]
 controller2TestData1 =
+  ------------------------
+  --  (Reset, WalkRequest)
+  ------------------------
+    [ "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  1"  -- counted walkRequest, cycle 3
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  1"  -- counted walkRequest, cycle 10
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "1  0"  -- reset signal, cycle 17
+    , "0  0"  --
+    , "0  0"  --
+    ]
+
+controller2TestData2 =
 ------------------------
---  (Reset, WalkRequest) Reset and walkRequest signal at different times
+--  (Reset, WalkRequest)
 ------------------------
   [ "0  0"  --
   , "0  0"  --
   , "0  0"  --
-  , "0  1"  --
+  , "0  1"  --  counted walkRequest, cycle 3
   , "0  0"  --
   , "0  0"  --
   , "0  0"  --
+  , "0  1"  --  uncounted walkRequest, cycle 7
   , "0  0"  --
+  , "0  1"  --  counted walkRequest, cycle 9
   , "0  0"  --
-  , "0  0"  --
-  , "1  0"  --
-  , "0  0"  --
+  , "0  0"  -- 
   , "0  0"  --
   , "0  0"  --
   , "0  0"  --
   , "0  0"  --
   ]
-controller2TestData2 =
+
+controller2TestData3 =
   ------------------------
-  --  walkRequest during existing Amber/Red/Amber cycle
+  --  (Reset, WalkRequest)
   ------------------------
     [ "0  0"  --
     , "0  0"  --
     , "0  0"  --
-    , "0  1"  --
+    , "0  1"  -- counted walkRequest, cycle 3
+    , "0  0"  --
+    , "0  0"  --
+    , "1  0"  -- reset, cycle 6
+    , "0  0"  --
+    , "0  1"  -- counted walkRequest, cycle 8
     , "0  0"  --
     , "0  0"  --
     , "0  0"  --
-    , "0  1"  --
     , "0  0"  --
-    , "0  1"  --
-    , "0  0"  --
-    , "0  0"  --
-    , "0  1"  --
     , "0  0"  --
     , "0  0"  --
     , "0  0"  --
     ]
-controller2TestData3 =
-    ------------------------
-    --  Reset during WalkRequest
-    ------------------------
-      [ "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  1"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "1  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      , "0  0"  --
-      ]
 
 controller2Driver :: IO ()
 controller2Driver = driver $ do
 
 -- Input data
 -- Change test data set here.
-  useData controller2TestData1
+  useData controller2TestData2
 
 -- Input ports
   in_reset <- inPortBit "reset"

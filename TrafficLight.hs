@@ -43,17 +43,16 @@ controller2 reset walkRequest = (red, amber, green, wait, walk, requestCount)
           wait = or2 green amber
           walk = red
 
-          -- walkPressed signal wired into 16 bit counter
+          -- buttonPressBuffer signal wired into 16 bit counter
           walkPressed = and3 reset' walkRequest (inv (and2 countBuffer idleState))
           countBuffer = dff (and2 reset' walkPressed)
-          requestCount = count16 (and2 reset' walkPressed) reset
+          requestCount = count16 (and2 reset' buttonPressBuffer) reset
           
           reset' = inv reset
 
           -- determines if walk button is pressed and to ignore multiple presses in a cycle
-          idleState = dff (inv cycleOccuring) 
-          cycleOccuring = and3 reset' buttonPressBuffer (inv x4) 
-          buttonPressBuffer = and3 reset' walkRequest (inv x0)
+          idleState = dff (inv (and3 reset' buttonPressBuffer (inv x4))) 
+          buttonPressBuffer = and4 reset' walkRequest (inv x0) (and2 (inv red) (inv amber))
 
           -- dffs numbered in order of light transition on clock tick
           x0 = dff buttonPressBuffer

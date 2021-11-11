@@ -6,19 +6,20 @@ author: Marc Elrick, 2316291
 author: Ethan Ingraham, 2387502
 author: Abubakr Mahmood, 2257419
 
-Both Version 1 and Version 2 compile and function as intended.
+Both Controller 1 and Controller 2 compile and function as intended.
 
 To develop the two versions, we first designed the circuits. This was done using
-the website CircuitVerse. After this, it became a matter of implementing the
-existing design in Hydra code.
+the website CircuitVerse, where we could collaborate together. After this, it
+became a matter of implementing the existing design in Hydra code.
 
-To test the Version 1 circuit. The driver tests the 'normal use' as named in the
+To test the Controller 1 circuit. The driver tests the 'normal use' as named in the
 specification, where there is a high reset signal to begin with, before the
-circuit runs the traffic light cycle. In non-normal cases where the reset button
-is pressed, after the next clock-tick the traffic lights will return to green,
-at the beginning of the sequence.
+circuit runs the traffic light cycle (This test is labelled
+Controller1TestData1). In non-normal cases where the reset button is pressed,
+after the next clock-tick the traffic lights will return to green at the
+beginning of the sequence (Test: Controller1TestData2).
 
-Version 2 left some design decisions up to us, one of which was 'what would
+Controller 2 left some design decisions up to us, one of which was 'what would
 happen if the walkRequest button is pressed during the red/walk state?'. We
 decided to effectively ignore any walkRequest in non-green/wait states. The
 counter also would not increment in these cases. This is because, imagining in a
@@ -28,7 +29,7 @@ amber/red/amber cycle should not be interrupted and restarted.
 
 Although it wasn't explicitly mentioned in the specification, another decision
 we made was to have the Reset button immediately return the lights to the
-green/wait state alongside resetting the walkcount to 0 as the green/wait state
+green/wait state alongside resetting the walkCount to 0 as the green/wait state
 is the default state of the circuit.
 
 There is also commentary within the source program and driver.
