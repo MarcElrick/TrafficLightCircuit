@@ -29,27 +29,28 @@ controller1 reset = (red, amber, green)
 
 -- 16 bit counter made by connecting 4 4-bit counters.
 -- Each counter is given logical and of the output signals of all previous counters.
-
 count16 :: CBit a => a -> [[a]]
 count16 reset = [w0,w1,w2,w3]
-  where  w0 = count4ripple reset (head w1)
-         w1 = count4ripple reset (head w2)
+  where  w0 = count4ripple reset (head w1) -- First bit of each word is carry bit
+         w1 = count4ripple reset (head w2) -- Each counter given c_out from previous counter
          w2 = count4ripple reset (head w3)
-         w3 = count4ripple reset one
+         w3 = count4ripple reset one -- First 4 bit counter is given 1 as c_in to start the chain of counters
 
 
 -- Modified version of count4b taken from /examples/counter
 -- Modified to accept a carry input bit and output a carry output bit.
 count4ripple :: CBit a => a -> a -> [a]
 count4ripple reset c_in = [c_out,x0,x1,x2,x3]
-  where c_out = and2 c_in (and2 (and2 x0 x1) (and2 x2 x3))
-        (c0,x0) = cbit reset c1
-        (c1,x1) = cbit reset c2
-        (c2,x2) = cbit reset c3
-        (c3,x3) = cbit reset c_in
+  where 
+    c_out = and2 c_in (and4 x0 x1 x2 x3) -- c_out is one when counter is full and all previous counters are full
+    (c0,x0) = cbit reset c1
+    (c1,x1) = cbit reset c2
+    (c2,x2) = cbit reset c3
+    (c3,x3) = cbit reset c_in -- counter only starts counting when c_in is true
 
 
-
+-- cbit also taken from /examples/counter
+-- This is completely unchanged
 cbit :: CBit a => a -> a -> (a,a)
 cbit reset cin = (cout,s)
   where
