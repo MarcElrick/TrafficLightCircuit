@@ -35,7 +35,7 @@ controller1TestData =
   , "0"  --  
   , "0"  --  
   , "0"  --  
-  , "0"  --  reset, cycle 11
+  , "0"  -- 
   , "0"  --  
   , "0"  --  
   , "0"  -- 
@@ -83,15 +83,15 @@ controller2TestData =
   [ "0  0"  --  
   , "0  0"  --  
   , "0  0"  --  
-  , "0  1"  --  
+  , "0  1"  --  counted walkRequest, cycle 3
   , "0  0"  --  
   , "0  0"  --  
   , "0  0"  --  
-  , "0  1"  --  
+  , "0  1"  --  uncounted walkRequest, cycle 8
   , "0  0"  --  
+  , "0  1"  --  counted walkRequest, cycle 10
   , "0  0"  --  
-  , "1  0"  --  reset, cycle 11
-  , "0  0"  --  
+  , "1  0"  --  reset, cycle 12
   , "0  0"  --  
   , "0  0"  -- 
   , "0  0"  --  
