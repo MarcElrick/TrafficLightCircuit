@@ -139,7 +139,7 @@ controller2TestData2 =
   , "0  0"  --
   , "0  1"  --  counted walkRequest, cycle 9
   , "0  0"  --
-  , "0  0"  -- 
+  , "0  0"  --
   , "0  0"  --
   , "0  0"  --
   , "0  0"  --
@@ -173,7 +173,7 @@ controller2Driver = driver $ do
 
 -- Input data
 -- Change test data set here.
-  useData controller2TestData2
+  useData controller2TestData1
 
 -- Input ports
   in_reset <- inPortBit "reset"
