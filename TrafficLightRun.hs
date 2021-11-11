@@ -2,72 +2,52 @@
 
 module Main where
 import HDL.Hydra.Core.Lib
-import TrafficLight
+import TrafficLight ( controller1, controller2 )
 
---Declaration of all test data sets
-test_data_v1_1, test_data_v1_2 :: [String]
 
-test_data_v1_1 =
+------------------------------------------------------------------------
+-- Running executable functions of type IO ()
+------------------------------------------------------------------------
+
+main :: IO ()
+main = do
+  putStrLn "*** controller1 simulation ***"
+  controller1Driver
+  putStrLn "*** controller2 simulation ***"
+  controller2Driver
+
+------------------------------------------------------------------------
+-- Simulate controller1 circuit
+------------------------------------------------------------------------
+
+controller1TestData :: [String]
+controller1TestData =
 --------------
 --   Normal use (reset to begin sequence only)  --
 --------------
-  [ "1"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
-  , "0"  --
+  [ "1"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  
+  , "0"  --  reset, cycle 11
+  , "0"  --  
+  , "0"  --  
+  , "0"  -- 
+  , "0"  --  
+  , "0"  -- 
   ]
 
-test_data_v1_2 =
-  --------------
-  --   Reset pressed during sequence  --
-  --------------
-    [ "1"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "1"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    , "0"  --
-    ]
+controller1Driver :: IO ()
+controller1Driver = driver $ do
 
-main :: IO ()
-main = driver $ do
-
--- Input data. Specifies what test data set we use
-  useData test_data_v1_1
+-- Input data
+  useData controller1TestData
 
 -- Input ports (we only have a reset input)
   in_reset <- inPortBit "reset"
@@ -85,6 +65,71 @@ main = driver $ do
      string "  output red=", bit red,
      string "  output amber=", bit amber,
      string "  output green=", bit green
+    ]
+
+-- Run the circuit on the test data
+  runSimulation
+
+
+------------------------------------------------------------------------
+-- Simulate controller2 circuit
+------------------------------------------------------------------------
+
+controller2TestData :: [String]
+controller2TestData =
+------------------------
+--  reset  walkRequest 
+------------------------
+  [ "0  0"  --  
+  , "0  0"  --  
+  , "0  0"  --  
+  , "0  1"  --  
+  , "0  0"  --  
+  , "0  0"  --  
+  , "0  0"  --  
+  , "0  1"  --  
+  , "0  0"  --  
+  , "0  0"  --  
+  , "1  0"  --  reset, cycle 11
+  , "0  0"  --  
+  , "0  0"  --  
+  , "0  0"  -- 
+  , "0  0"  --  
+  , "0  0"  -- 
+  ]
+
+controller2Driver :: IO ()
+controller2Driver = driver $ do
+
+-- Input data
+  useData controller2TestData
+
+-- Input ports  
+  in_reset <- inPortBit "reset"
+  in_walkRequest <- inPortBit "walkRequest"
+
+
+-- Input signals
+  let reset = inbsig in_reset
+  let walkRequest = inbsig in_walkRequest
+
+-- Circuit
+  let (red, amber, green, wait, walk, requestCount) = controller2 reset walkRequest
+
+-- Format the results  
+  format
+    [string "  reset=", bit reset,
+     string "  walkRequest=", bit walkRequest,
+     string "  output red=", bit red,
+     string "  output amber=", bit amber,
+     string "  output green=", bit green,
+     string "  output wait=", bit wait,
+     string "  output walk=", bit walk,
+     
+     string "  output w0 =", bindec 4 (requestCount !! 0), -- Most significant 4 bits 
+     string "  output w1 =", bindec 4 (requestCount !! 1), 
+     string "  output w2 =", bindec 4 (requestCount !! 2),
+     string "  output w3 =", bindec 4 (requestCount !! 3) -- Least significant 4 bits 
     ]
 
 -- Run the circuit on the test data
