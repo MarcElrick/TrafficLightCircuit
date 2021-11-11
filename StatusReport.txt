@@ -33,12 +33,12 @@ green/wait state alongside resetting the walkCount to 0 as the green/wait state
 is the default state of the circuit.
 
 The test cases we created for Controller 2 are:
-Test 1 - walkRequests not during an existing amber/red/amber
-cycle, followed by a reset. Normal use.
-Test 2 - walkRequests during an existing cycle, therefore not
-incrementing counter and not interrupting existing cycle.
-Test 3 - reset signal during walkRequest cycle, interrupts and
-sets lights to green/wait state as well as setting counter to 0.
+Test 1 - walkRequests not during an existing amber/red/amber cycle, followed by
+a reset. Normal use.
+Test 2 - walkRequests during an existing cycle, therefore not incrementing
+counter and not interrupting existing cycle.
+Test 3 - reset signal during walkRequest cycle, interrupts and sets lights to
+green/wait state as well as setting counter to 0.
 All of the outputs are as expected.
 
 There is also commentary within the source program and driver.
