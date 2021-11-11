@@ -126,10 +126,12 @@ controller2Driver = driver $ do
      string "  output wait=", bit wait,
      string "  output walk=", bit walk,
      
-     string "  output w0 =", bindec 4 (requestCount !! 0), -- Most significant 4 bits 
-     string "  output w1 =", bindec 4 (requestCount !! 1), 
-     string "  output w2 =", bindec 4 (requestCount !! 2),
-     string "  output w3 =", bindec 4 (requestCount !! 3) -- Least significant 4 bits 
+
+     -- Four 4-bit words. When combined, this is the output of the 16 bit counter. 
+     string "  output countWord0 =", bindec 4 (requestCount !! 0), -- Most significant 4 bits 
+     string "  output countWord1 =", bindec 4 (requestCount !! 1), 
+     string "  output countWord2 =", bindec 4 (requestCount !! 2),
+     string "  output countWord3 =", bindec 4 (requestCount !! 3) -- Least significant 4 bits 
     ]
 
 -- Run the circuit on the test data

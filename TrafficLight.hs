@@ -43,10 +43,11 @@ controller2 reset walkRequest = (red, amber, green, wait, walk, requestCount)
           wait = or2 green amber
           walk = red
 
+          -- walkPressed signal wired into 16 bit counter
           walkPressed = and3 reset' walkRequest (inv (and2 countBuffer idleState))
           countBuffer = dff (and2 reset' walkPressed)
           requestCount = count16 (and2 reset' walkPressed) reset
-
+          
           reset' = inv reset
 
           -- determines if walk button is pressed and to ignore multiple presses in a cycle
