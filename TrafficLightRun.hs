@@ -20,34 +20,56 @@ main = do
 -- Simulate controller1 circuit
 ------------------------------------------------------------------------
 
-controller1TestData :: [String]
-controller1TestData =
+controller1TestData1, controller1TestData2 :: [String]
+controller1TestData1 =
 --------------
 --   Normal use (reset to begin sequence only)  --
 --------------
-  [ "1"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  
-  , "0"  --  reset, cycle 11
-  , "0"  --  
-  , "0"  --  
-  , "0"  -- 
-  , "0"  --  
-  , "0"  -- 
+  [ "1"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
+  , "0"  --
   ]
+controller1TestData2 =
+  --------------
+  --   Reset signal during sequence  --
+  --------------
+    [ "1"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "1"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    , "0"  --
+    ]
 
 controller1Driver :: IO ()
 controller1Driver = driver $ do
 
 -- Input data
-  useData controller1TestData
+-- Change test data set here.
+  useData controller1TestData1
 
 -- Input ports (we only have a reset input)
   in_reset <- inPortBit "reset"
@@ -75,36 +97,79 @@ controller1Driver = driver $ do
 -- Simulate controller2 circuit
 ------------------------------------------------------------------------
 
-controller2TestData :: [String]
-controller2TestData =
+controller2TestData1, controller2TestData2, controller2TestData3 :: [String]
+controller2TestData1 =
 ------------------------
---  reset  walkRequest 
+--  (Reset, WalkRequest) Reset and walkRequest signal at different times
 ------------------------
-  [ "0  0"  --  
-  , "0  0"  --  
-  , "0  0"  --  
-  , "0  1"  --  
-  , "0  0"  --  
-  , "0  0"  --  
-  , "0  0"  --  
-  , "0  1"  --  
-  , "0  0"  --  
-  , "0  0"  --  
-  , "1  0"  --  reset, cycle 11
-  , "0  0"  --  
-  , "0  0"  --  
-  , "0  0"  -- 
-  , "0  0"  --  
-  , "0  0"  -- 
+  [ "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  1"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "1  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
+  , "0  0"  --
   ]
+controller2TestData2 =
+  ------------------------
+  --  walkRequest during existing Amber/Red/Amber cycle
+  ------------------------
+    [ "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  1"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  1"  --
+    , "0  0"  --
+    , "0  1"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  1"  --
+    , "0  0"  --
+    , "0  0"  --
+    , "0  0"  --
+    ]
+controller2TestData3 =
+    ------------------------
+    --  Reset during WalkRequest
+    ------------------------
+      [ "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  1"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "1  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      , "0  0"  --
+      ]
 
 controller2Driver :: IO ()
 controller2Driver = driver $ do
 
 -- Input data
-  useData controller2TestData
+-- Change test data set here.
+  useData controller2TestData1
 
--- Input ports  
+-- Input ports
   in_reset <- inPortBit "reset"
   in_walkRequest <- inPortBit "walkRequest"
 
@@ -116,7 +181,7 @@ controller2Driver = driver $ do
 -- Circuit
   let (red, amber, green, wait, walk, requestCount) = controller2 reset walkRequest
 
--- Format the results  
+-- Format the results
   format
     [string "  reset=", bit reset,
      string "  walkRequest=", bit walkRequest,
@@ -125,13 +190,13 @@ controller2Driver = driver $ do
      string "  output green=", bit green,
      string "  output wait=", bit wait,
      string "  output walk=", bit walk,
-     
 
-     -- Four 4-bit words. When combined, this is the output of the 16 bit counter. 
-     string "  output countWord0 =", bindec 4 (requestCount !! 0), -- Most significant 4 bits 
-     string "  output countWord1 =", bindec 4 (requestCount !! 1), 
+
+     -- Four 4-bit words. When combined, this is the output of the 16 bit counter.
+     string "  output countWord0 =", bindec 4 (requestCount !! 0), -- Most significant 4 bits
+     string "  output countWord1 =", bindec 4 (requestCount !! 1),
      string "  output countWord2 =", bindec 4 (requestCount !! 2),
-     string "  output countWord3 =", bindec 4 (requestCount !! 3) -- Least significant 4 bits 
+     string "  output countWord3 =", bindec 4 (requestCount !! 3) -- Least significant 4 bits
     ]
 
 -- Run the circuit on the test data
