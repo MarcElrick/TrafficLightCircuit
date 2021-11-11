@@ -32,15 +32,16 @@ controller1 reset = (red, amber, green)
 
 count16 :: CBit a => a -> [[a]]
 count16 reset = [w0,w1,w2,w3]
-  where  w0 = count4b reset (head w1)
-         w1 = count4b reset (head w2)
-         w2 = count4b reset (head w3)
-         w3 = count4b reset one
+  where  w0 = count4ripple reset (head w1)
+         w1 = count4ripple reset (head w2)
+         w2 = count4ripple reset (head w3)
+         w3 = count4ripple reset one
 
 
--- count4b taken from /examples/counter
-count4b :: CBit a => a -> a -> [a]
-count4b reset c_in = [c_out,x0,x1,x2,x3]
+-- Modified version of count4b taken from /examples/counter
+-- Modified to accept a carry input bit and output a carry output bit.
+count4ripple :: CBit a => a -> a -> [a]
+count4ripple reset c_in = [c_out,x0,x1,x2,x3]
   where c_out = and2 c_in (and2 (and2 x0 x1) (and2 x2 x3))
         (c0,x0) = cbit reset c1
         (c1,x1) = cbit reset c2
